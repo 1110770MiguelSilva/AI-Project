@@ -1,0 +1,10 @@
+Criar classe Espaço(Bloco)
+Ler Ficheiros de Texto
+Ver para cada espaço, quais os movimentos possiveis
+Fazer Metodo DFS (LIFO:Stack)
+Fazer Metodo BFS (FIFO:Queue)
+Mostrar tamanho do caminho mais curto
+Comparar os dois algoritmos em termos de tempo e de tamanho dos caminhos.
+
+Final de tudo: Fazer interface grafica
+
