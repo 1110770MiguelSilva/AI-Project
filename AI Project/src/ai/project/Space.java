@@ -14,7 +14,7 @@ public class Space {
     private boolean goRight = false;
     private int spaceNumber = 0;
     private int line = 0; 
-    private int column = 0; 
+    private int column = 0;
 
     public Space(boolean goUp, boolean goLeft, boolean goDown, boolean goRight, int line, int column) 
     {

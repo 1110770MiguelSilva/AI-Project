@@ -16,7 +16,7 @@ public class AIProject {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+        GUIWindow window = new GUIWindow();
     }
     
 }
