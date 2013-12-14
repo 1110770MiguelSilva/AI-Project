@@ -26,22 +26,22 @@ public class Space {
         this.column = column;
     }
 
-    public boolean hasWallDown() 
+    public boolean hasSpaceDown() 
     {
         return goDown;
     }
 
-    public boolean hasWallLeft() 
+    public boolean hasSpaceLeft() 
     {
         return goLeft;
     }
 
-    public boolean hasWallRight() 
+    public boolean hasSpaceRight() 
     {
         return goRight;
     }
 
-    public boolean hasWallUp() 
+    public boolean hasSpaceUp() 
     {
         return goUp;
     }
