@@ -22,6 +22,7 @@ public class AIProject {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+
         Maze maze = new Maze();
 //        JFileChooser fc = new JFileChooser();
 //        int returnVal = fc.showOpenDialog(null);
@@ -47,6 +48,7 @@ public class AIProject {
         System.out.println("_______________________________________");
         
         maze.methodDFS();
+       
     }
     
 }
