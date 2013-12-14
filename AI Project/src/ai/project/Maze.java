@@ -10,6 +10,7 @@ import java.util.*;
 public class Maze {
 
     private Space maze[][];
+    
     private int begin[] = new int[2];
     private int end[] = new int[2];
 
@@ -62,5 +63,78 @@ public class Maze {
             }
             line = line + 2;
         }
+    }
+    
+    //Right->Down->Left->Up
+    public void methodDFS(){
+        Stack <Space> stackDFS = new Stack();
+        int count=0;
+        boolean nextMove = true;
+        Space currentSpace = maze[begin[0]][begin[1]];
+        Space nextOne;
+        
+        while(nextMove){
+            nextMove=false;
+            if(currentSpace.hasWallRight()==false && maze[currentSpace.getLine()][currentSpace.getColumn()+1].getSpaceNumber()==0){
+                nextOne = maze[currentSpace.getLine()][currentSpace.getColumn()+1];
+                stackDFS.addElement(nextOne);
+                nextMove=true;
+            }
+            if(currentSpace.hasWallDown()==false && maze[currentSpace.getLine()+1][currentSpace.getColumn()].getSpaceNumber()==0){
+                nextOne = maze[currentSpace.getLine()+1][currentSpace.getColumn()];
+                stackDFS.addElement(nextOne);
+                nextMove=true;
+            }
+            if(currentSpace.hasWallLeft()==false && maze[currentSpace.getLine()][currentSpace.getColumn()-1].getSpaceNumber()==0){
+                nextOne = maze[currentSpace.getLine()][currentSpace.getColumn()-1];
+                stackDFS.addElement(nextOne);
+                nextMove=true;
+            }
+            if(currentSpace.hasWallUp()==false && maze[currentSpace.getLine()-1][currentSpace.getColumn()].getSpaceNumber()==0){
+                nextOne = maze[currentSpace.getLine()-1][currentSpace.getColumn()];
+                stackDFS.addElement(nextOne);
+                nextMove=true;
+            }
+            
+            count++;
+            maze[currentSpace.getLine()][currentSpace.getColumn()].setSpaceNumber(count);
+            
+        }  
+    }
+    
+    //Up->Left->Down->Right
+    public void methodBFS(){
+        Queue <Space> queueBFS = new LinkedList();
+        int count=0;
+        boolean nextMove = true;
+        Space currentSpace = maze[begin[0]][begin[1]];
+        Space nextOne;
+        
+        while(nextMove){
+            nextMove=false;
+            if(currentSpace.hasWallUp()==false && maze[currentSpace.getLine()-1][currentSpace.getColumn()].getSpaceNumber()==0){
+                nextOne = maze[currentSpace.getLine()-1][currentSpace.getColumn()];
+                queueBFS.add(nextOne);
+                nextMove=true;
+            }
+            if(currentSpace.hasWallLeft()==false && maze[currentSpace.getLine()][currentSpace.getColumn()-1].getSpaceNumber()==0){
+                nextOne = maze[currentSpace.getLine()][currentSpace.getColumn()-1];
+                queueBFS.add(nextOne);
+                nextMove=true;
+            }
+            if(currentSpace.hasWallDown()==false && maze[currentSpace.getLine()+1][currentSpace.getColumn()].getSpaceNumber()==0){
+                nextOne = maze[currentSpace.getLine()+1][currentSpace.getColumn()];
+                queueBFS.add(nextOne);
+                nextMove=true;
+            }
+            if(currentSpace.hasWallRight()==false && maze[currentSpace.getLine()][currentSpace.getColumn()+1].getSpaceNumber()==0){
+                nextOne = maze[currentSpace.getLine()][currentSpace.getColumn()+1];
+                queueBFS.add(nextOne);
+                nextMove=true;
+            }
+            count++;
+            maze[currentSpace.getLine()][currentSpace.getColumn()].setSpaceNumber(count);
+            
+        }  
     }
 }
