@@ -1,9 +1,11 @@
 package ai.project;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,6 +31,10 @@ public class GUIWindow extends JFrame {
     JMenuItem exit, dfs, bfs, importTxt;
     ImageIcon background;
     JScrollPane scrollPane;
+    GUISpace spaces[][];
+    JPanel cardLayers;
+    CardLayout cardLayout;
+    String filePath;
 
     public GUIWindow() {
         super("Maze Solver");
@@ -38,9 +44,13 @@ public class GUIWindow extends JFrame {
 
         setLayout(new BorderLayout());
 
-        setSize(1000, 850);
-        setBounds(0, 0, 1000, 850);
+        setSize(700, 550);
+        setBounds(0, 0, 700, 550);
         setMinimumSize(new Dimension(600, 400));
+
+        cardLayout = new CardLayout();
+        cardLayers = new JPanel(cardLayout);
+        cardLayers.setOpaque(false);
 
         menu = new JMenuBar();
         add(menu);
@@ -57,6 +67,7 @@ public class GUIWindow extends JFrame {
         };
         panel.setLayout(new BorderLayout());
         panel.add(menu, BorderLayout.NORTH);
+        panel.add(cardLayers, BorderLayout.CENTER);
         scrollPane = new JScrollPane(panel);
         setContentPane(scrollPane);
 
@@ -106,12 +117,56 @@ public class GUIWindow extends JFrame {
                     JOptionPane.showMessageDialog(GUIWindow.this, "Wrong file extension", "Error", JOptionPane.WARNING_MESSAGE);
                 } else {
                     try {
-                        maze.readFile(fd.getDirectory() + "\\" + fd.getFile());
+                        filePath = fd.getDirectory() + "\\" + fd.getFile();
+                        maze.readFile(filePath);
+                        boolean top = false, left = false, down = false, right = false, begin = false, end = false;
+                        int[] entranceSpace = maze.getBegin();
+                        int[] exitSpace = maze.getEnd();
+
+                        spaces = new GUISpace[maze.getNumLines()][maze.getNumColumns()];
+
+                        for (int i = 0; i < maze.getNumLines(); i++) {
+                            for (int j = 0; j < maze.getNumColumns(); j++) {
+                                if (maze.getSpace(i, j).hasSpaceUp()) {
+                                    top = true;
+                                }
+                                if (maze.getSpace(i, j).hasSpaceLeft()) {
+                                    left = true;
+                                }
+                                if (maze.getSpace(i, j).hasSpaceDown()) {
+                                    down = true;
+                                }
+                                if (maze.getSpace(i, j).hasSpaceRight()) {
+                                    right = true;
+                                }
+                                if (entranceSpace[0] == i && entranceSpace[1] == j) {
+                                    begin = true;
+                                }
+                                if (exitSpace[0] == i && exitSpace[1] == j) {
+                                    end = true;
+                                }
+                                spaces[i][j] = new GUISpace(top, left, down, right, begin, end);
+                                top = left = down = right = begin = end = false;
+                            }
+                        }
+
+                        JPanel mazePanel = new JPanel(new GridLayout(maze.getNumLines(), maze.getNumColumns()));
+
+                        for (int i = 0; i < spaces.length; i++) {
+                            for (int j = 0; j < spaces[0].length; j++) {
+                                mazePanel.add(spaces[i][j]);
+                            }
+                        }
+
+                        cardLayers.add(mazePanel, "Load Maze");
+                        
+
                     } catch (FileNotFoundException ex) {
                         JOptionPane.showMessageDialog(rootPane, "Error openning the file.");
                     }
                 }
-
+                printMaze();
+                cardLayout.show(cardLayers, "Maze Loaded");
             }
         });
 
@@ -120,12 +175,17 @@ public class GUIWindow extends JFrame {
 
     private void exit() {
         Object[] opYesNo = {"Yes", "No"};
-        if (JOptionPane.showOptionDialog(this, "Do you really want to quit?", "Quit?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, opYesNo, opYesNo[1]) == 0) {
+        if (JOptionPane.showOptionDialog(this, "Do you really want to exit?", "Exit?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, opYesNo, opYesNo[1]) == 0) {
             dispose();
         }
     }
 
-    private void readFile(String file) {
-
+    private void printMaze() {
+        for (int i = 0; i < maze.getNumLines(); i++) {
+            for (int j = 0; j < maze.getNumColumns(); j++) {
+                spaces[i][j].setUnPassed();
+                spaces[i][j].repaint();
+            }
+        }
     }
 }
