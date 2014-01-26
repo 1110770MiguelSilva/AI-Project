@@ -26,11 +26,11 @@ public class Maze {
 
         //Gets the coordinates for the Beginning and End of the Maze from the last two lines of the text file
         String txtBegin[] = text.get(text.size() - 2).split(",");
-        begin[0] = Integer.parseInt(txtBegin[0]);
-        begin[1] = Integer.parseInt(txtBegin[1]);
+        getBegin()[0] = Integer.parseInt(txtBegin[0]);
+        getBegin()[1] = Integer.parseInt(txtBegin[1]);
         String txtEnd[] = text.get(text.size() - 1).split(",");
-        end[0] = Integer.parseInt(txtEnd[0]);
-        end[1] = Integer.parseInt(txtEnd[1]);
+        getEnd()[0] = Integer.parseInt(txtEnd[0]);
+        getEnd()[1] = Integer.parseInt(txtEnd[1]);
 
         //Gets the number of lines and columns the maze will have, and then calls the method create it
         int nrColumns = (text.get(0).length() - 1) / 2;
@@ -77,11 +77,10 @@ public class Maze {
     public void methodDFS(){
         long startTime = System.nanoTime();    
 
-        
         Stack <Space> stackDFS = new Stack();
         int count=0;
         boolean nextMove = true;
-        Space currentSpace = maze[begin[0]][begin[1]];
+        Space currentSpace = maze[getBegin()[0]][getBegin()[1]];
         Space nextOne;
         
         while(nextMove){
@@ -137,7 +136,7 @@ public class Maze {
         Queue <Space> queueBFS = new LinkedList();
         int count=0;
         boolean nextMove = true;
-        Space currentSpace = maze[begin[0]][begin[1]];
+        Space currentSpace = maze[getBegin()[0]][getBegin()[1]];
         Space nextOne;
         
         while(nextMove){
@@ -191,10 +190,32 @@ public class Maze {
         System.out.println("BFS-Elapsed Time:"+elapsedTime);
     }
     
+    public void createMaze(int num1, int num2){
+        Space maze[][] = new Space[num1][num2];
+        
+        
+    }
+    
     public void printQueue(Queue<Space> queue){
         for(Space space:queue){
             System.out.print(space.getSpaceNumber()+",");
         }
         System.out.println();
+    }
+
+    public int[] getBegin() {
+        return begin;
+    }
+
+    public void setBegin(int[] begin) {
+        this.begin = begin;
+    }
+
+    public int[] getEnd() {
+        return end;
+    }
+
+    public void setEnd(int[] end) {
+        this.end = end;
     }
 }
