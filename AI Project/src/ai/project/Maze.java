@@ -226,6 +226,16 @@ public class Maze {
     }
     
     public Space getSpace(int line, int column){
-        return maze[line][column];
+        return maze[line][column];        
     }
+    
+    public int getNumLines(){
+        return maze.length;
+    }
+    
+    public int getNumColumns(){
+        return maze[0].length;
+    }
+    
+    
 }
