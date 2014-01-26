@@ -193,6 +193,12 @@ public class Maze {
     public void createMaze(int num1, int num2){
         Space maze[][] = new Space[num1][num2];
         
+        for (int i = 0; i < num1; i++) {
+            
+            for (int j = 0; j < num2; j++) {
+                
+            }
+        }
         
     }
     
@@ -217,5 +223,9 @@ public class Maze {
 
     public void setEnd(int[] end) {
         this.end = end;
+    }
+    
+    public Space getSpace(int line, int column){
+        return maze[line][column];
     }
 }
