@@ -86,25 +86,21 @@ public class Maze {
         while(nextMove){
             nextMove=false;
             if(currentSpace.hasSpaceRight()==true && maze[currentSpace.getLine()][currentSpace.getColumn()+1].getSpaceNumber()==0){
-                //System.out.println("RIGHT = "+currentSpace.getLine()+","+currentSpace.getColumn());
                 nextOne = maze[currentSpace.getLine()][currentSpace.getColumn()+1];
                 stackDFS.addElement(nextOne);
                 nextMove=true;
             }
             if(currentSpace.hasSpaceDown()==true && maze[currentSpace.getLine()+1][currentSpace.getColumn()].getSpaceNumber()==0){
-                //System.out.println("DOWN = "+currentSpace.getLine()+","+currentSpace.getColumn());
                 nextOne = maze[currentSpace.getLine()+1][currentSpace.getColumn()];
                 stackDFS.addElement(nextOne);
                 nextMove=true;
             }
             if(currentSpace.hasSpaceLeft()==true && maze[currentSpace.getLine()][currentSpace.getColumn()-1].getSpaceNumber()==0){
-                //System.out.println("LEFT = "+currentSpace.getLine()+","+currentSpace.getColumn());
                 nextOne = maze[currentSpace.getLine()][currentSpace.getColumn()-1];
                 stackDFS.addElement(nextOne);
                 nextMove=true;
             }
             if(currentSpace.hasSpaceUp()==true && maze[currentSpace.getLine()-1][currentSpace.getColumn()].getSpaceNumber()==0){
-                //System.out.println("UP = "+currentSpace.getLine()+","+currentSpace.getColumn());
                 nextOne = maze[currentSpace.getLine()-1][currentSpace.getColumn()];
                 stackDFS.addElement(nextOne);
                 nextMove=true;
@@ -112,7 +108,6 @@ public class Maze {
             
             count++;
             maze[currentSpace.getLine()][currentSpace.getColumn()].setSpaceNumber(count);
-            //System.out.println("CurrentSpace: "+maze[currentSpace.getLine()][currentSpace.getColumn()].getSpaceNumber());
             
             if (!stackDFS.isEmpty()) {
                 do {
@@ -142,36 +137,30 @@ public class Maze {
         while(nextMove){
             nextMove=false;
             if(currentSpace.hasSpaceUp()==true && maze[currentSpace.getLine() - 1][currentSpace.getColumn()].getSpaceNumber()==0){
-                
                 nextOne = maze[currentSpace.getLine()-1][currentSpace.getColumn()];
                 queueBFS.add(nextOne);
                 nextMove=true;
             }
             if(currentSpace.hasSpaceLeft()==true && maze[currentSpace.getLine()][currentSpace.getColumn()-1].getSpaceNumber()==0){
-                
                 nextOne = maze[currentSpace.getLine()][currentSpace.getColumn()-1];
                 queueBFS.add(nextOne);
                 nextMove=true;
             }
             if(currentSpace.hasSpaceDown()==true && maze[currentSpace.getLine()+1][currentSpace.getColumn()].getSpaceNumber()==0){
-                
                 nextOne = maze[currentSpace.getLine()+1][currentSpace.getColumn()];
                 queueBFS.add(nextOne);
                 nextMove=true;
             }
             if(currentSpace.hasSpaceRight()==true && maze[currentSpace.getLine()][currentSpace.getColumn()+1].getSpaceNumber()==0){
-                
                 nextOne = maze[currentSpace.getLine()][currentSpace.getColumn()+1];
                 queueBFS.add(nextOne);
                 nextMove=true;
             }
             count++;
             maze[currentSpace.getLine()][currentSpace.getColumn()].setSpaceNumber(count);
-            //System.out.println("CurrentSpace: "+maze[currentSpace.getLine()][currentSpace.getColumn()].getSpaceNumber());
             //printQueue(queueBFS);
             
 //            currentSpace = queueBFS.poll();
-            
             
             if (!queueBFS.isEmpty()) {
                 do {
@@ -190,17 +179,6 @@ public class Maze {
         System.out.println("BFS-Elapsed Time:"+elapsedTime);
     }
     
-    public void createMaze(int num1, int num2){
-        Space maze[][] = new Space[num1][num2];
-        
-        for (int i = 0; i < num1; i++) {
-            
-            for (int j = 0; j < num2; j++) {
-                
-            }
-        }
-        
-    }
     
     public void printQueue(Queue<Space> queue){
         for(Space space:queue){
