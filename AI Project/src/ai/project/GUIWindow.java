@@ -14,6 +14,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -159,7 +160,6 @@ public class GUIWindow extends JFrame {
                         }
 
                         cardLayers.add(mazePanel, "Load Maze");
-                        
 
                     } catch (FileNotFoundException ex) {
                         JOptionPane.showMessageDialog(rootPane, "Error openning the file.");
@@ -170,7 +170,45 @@ public class GUIWindow extends JFrame {
             }
         });
 
+        dfs.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                maze.methodDFS();
+                solve();
+            }
+        });
+
+        bfs.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                maze.methodBFS();
+                solve();
+            }
+        });
+
         setVisible(true);
+    }
+
+    private void solve() {
+        if (maze.getPossible() == true) {
+            int size = maze.getNumColumns() * maze.getNumLines();
+            for (int k = 1; k < size + 1; k++) {
+                for (int i = 0; i < maze.getNumColumns(); i++) {
+                    for (int j = 0; j < maze.getNumLines(); j++) {
+                        if (maze.getSpace(i, j).getSpaceNumber() == k) {
+                            spaces[i][j].setPassed(maze.getSpace(i, j).getSpaceNumber());
+                            spaces[i][j].repaint();
+                        }
+                    }
+                }
+            }
+
+            Stack<Space> stack;
+            //stack = maze.solve();
+
+        }
     }
 
     private void exit() {

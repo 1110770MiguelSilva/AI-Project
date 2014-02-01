@@ -10,7 +10,8 @@ import java.util.*;
 public class Maze {
 
     private Space maze[][];
-    
+    private boolean isPossible = true;
+
     private int begin[] = new int[2];
     private int end[] = new int[2];
 
@@ -64,7 +65,7 @@ public class Maze {
             line = line + 2;
         }
     }
-    
+
     public void resetMaze() {
         for (int i = 0; i < maze.length; i++) {
             for (int j = 0; j < maze[0].length; j++) {
@@ -72,43 +73,43 @@ public class Maze {
             }
         }
     }
-    
-    //Right->Down->Left->Up
-    public void methodDFS(){
-        long startTime = System.nanoTime();    
 
-        Stack <Space> stackDFS = new Stack();
-        int count=0;
+    //Right->Down->Left->Up
+    public void methodDFS() {
+        long startTime = System.nanoTime();
+
+        Stack<Space> stackDFS = new Stack();
+        int count = 0;
         boolean nextMove = true;
         Space currentSpace = maze[getBegin()[0]][getBegin()[1]];
         Space nextOne;
-        
-        while(nextMove){
-            nextMove=false;
-            if(currentSpace.hasSpaceRight()==true && maze[currentSpace.getLine()][currentSpace.getColumn()+1].getSpaceNumber()==0){
-                nextOne = maze[currentSpace.getLine()][currentSpace.getColumn()+1];
+
+        while (nextMove) {
+            nextMove = false;
+            if (currentSpace.hasSpaceRight() == true && maze[currentSpace.getLine()][currentSpace.getColumn() + 1].getSpaceNumber() == 0) {
+                nextOne = maze[currentSpace.getLine()][currentSpace.getColumn() + 1];
                 stackDFS.addElement(nextOne);
-                nextMove=true;
+                nextMove = true;
             }
-            if(currentSpace.hasSpaceDown()==true && maze[currentSpace.getLine()+1][currentSpace.getColumn()].getSpaceNumber()==0){
-                nextOne = maze[currentSpace.getLine()+1][currentSpace.getColumn()];
+            if (currentSpace.hasSpaceDown() == true && maze[currentSpace.getLine() + 1][currentSpace.getColumn()].getSpaceNumber() == 0) {
+                nextOne = maze[currentSpace.getLine() + 1][currentSpace.getColumn()];
                 stackDFS.addElement(nextOne);
-                nextMove=true;
+                nextMove = true;
             }
-            if(currentSpace.hasSpaceLeft()==true && maze[currentSpace.getLine()][currentSpace.getColumn()-1].getSpaceNumber()==0){
-                nextOne = maze[currentSpace.getLine()][currentSpace.getColumn()-1];
+            if (currentSpace.hasSpaceLeft() == true && maze[currentSpace.getLine()][currentSpace.getColumn() - 1].getSpaceNumber() == 0) {
+                nextOne = maze[currentSpace.getLine()][currentSpace.getColumn() - 1];
                 stackDFS.addElement(nextOne);
-                nextMove=true;
+                nextMove = true;
             }
-            if(currentSpace.hasSpaceUp()==true && maze[currentSpace.getLine()-1][currentSpace.getColumn()].getSpaceNumber()==0){
-                nextOne = maze[currentSpace.getLine()-1][currentSpace.getColumn()];
+            if (currentSpace.hasSpaceUp() == true && maze[currentSpace.getLine() - 1][currentSpace.getColumn()].getSpaceNumber() == 0) {
+                nextOne = maze[currentSpace.getLine() - 1][currentSpace.getColumn()];
                 stackDFS.addElement(nextOne);
-                nextMove=true;
+                nextMove = true;
             }
-            
+
             count++;
             maze[currentSpace.getLine()][currentSpace.getColumn()].setSpaceNumber(count);
-            
+
             if (!stackDFS.isEmpty()) {
                 do {
                     if (stackDFS.peek().getSpaceNumber() != 0) {
@@ -120,48 +121,52 @@ public class Maze {
                     nextMove = true;
                 }
             }
-        }  
+        }
+
+        if (maze[end[0]][end[1]].getSpaceNumber() == 0) {
+            isPossible = false;
+        }
+
         long elapsedTime = System.nanoTime() - startTime;
-        System.out.println("DFS-Elapsed Time:"+elapsedTime);
+        System.out.println("DFS-Elapsed Time:" + elapsedTime);
     }
-    
+
     //Up->Left->Down->Right
-    public void methodBFS(){
+    public void methodBFS() {
         long startTime = System.nanoTime();
-        Queue <Space> queueBFS = new LinkedList();
-        int count=0;
+        Queue<Space> queueBFS = new LinkedList();
+        int count = 0;
         boolean nextMove = true;
         Space currentSpace = maze[getBegin()[0]][getBegin()[1]];
         Space nextOne;
-        
-        while(nextMove){
-            nextMove=false;
-            if(currentSpace.hasSpaceUp()==true && maze[currentSpace.getLine() - 1][currentSpace.getColumn()].getSpaceNumber()==0){
-                nextOne = maze[currentSpace.getLine()-1][currentSpace.getColumn()];
+
+        while (nextMove) {
+            nextMove = false;
+            if (currentSpace.hasSpaceUp() == true && maze[currentSpace.getLine() - 1][currentSpace.getColumn()].getSpaceNumber() == 0) {
+                nextOne = maze[currentSpace.getLine() - 1][currentSpace.getColumn()];
                 queueBFS.add(nextOne);
-                nextMove=true;
+                nextMove = true;
             }
-            if(currentSpace.hasSpaceLeft()==true && maze[currentSpace.getLine()][currentSpace.getColumn()-1].getSpaceNumber()==0){
-                nextOne = maze[currentSpace.getLine()][currentSpace.getColumn()-1];
+            if (currentSpace.hasSpaceLeft() == true && maze[currentSpace.getLine()][currentSpace.getColumn() - 1].getSpaceNumber() == 0) {
+                nextOne = maze[currentSpace.getLine()][currentSpace.getColumn() - 1];
                 queueBFS.add(nextOne);
-                nextMove=true;
+                nextMove = true;
             }
-            if(currentSpace.hasSpaceDown()==true && maze[currentSpace.getLine()+1][currentSpace.getColumn()].getSpaceNumber()==0){
-                nextOne = maze[currentSpace.getLine()+1][currentSpace.getColumn()];
+            if (currentSpace.hasSpaceDown() == true && maze[currentSpace.getLine() + 1][currentSpace.getColumn()].getSpaceNumber() == 0) {
+                nextOne = maze[currentSpace.getLine() + 1][currentSpace.getColumn()];
                 queueBFS.add(nextOne);
-                nextMove=true;
+                nextMove = true;
             }
-            if(currentSpace.hasSpaceRight()==true && maze[currentSpace.getLine()][currentSpace.getColumn()+1].getSpaceNumber()==0){
-                nextOne = maze[currentSpace.getLine()][currentSpace.getColumn()+1];
+            if (currentSpace.hasSpaceRight() == true && maze[currentSpace.getLine()][currentSpace.getColumn() + 1].getSpaceNumber() == 0) {
+                nextOne = maze[currentSpace.getLine()][currentSpace.getColumn() + 1];
                 queueBFS.add(nextOne);
-                nextMove=true;
+                nextMove = true;
             }
             count++;
             maze[currentSpace.getLine()][currentSpace.getColumn()].setSpaceNumber(count);
             //printQueue(queueBFS);
-            
+
 //            currentSpace = queueBFS.poll();
-            
             if (!queueBFS.isEmpty()) {
                 do {
                     if (queueBFS.peek().getSpaceNumber() != 0) {
@@ -173,16 +178,77 @@ public class Maze {
                     nextMove = true;
                 }
             }
-            
+
         }
+
+        if (maze[end[0]][end[1]].getSpaceNumber() == 0) {
+            isPossible = false;
+        }
+
         long elapsedTime = System.nanoTime() - startTime;
-        System.out.println("BFS-Elapsed Time:"+elapsedTime);
+        System.out.println("BFS-Elapsed Time:" + elapsedTime);
     }
-    
-    
-    public void printQueue(Queue<Space> queue){
-        for(Space space:queue){
-            System.out.print(space.getSpaceNumber()+",");
+
+    public Stack<Space> solve() {
+        Stack<Space> stack = null;
+        if (isPossible = true) {
+            stack = new Stack<Space>();
+            Space currentSpace = maze[end[0]][end[1]];
+            Space next;
+
+            while (currentSpace.getSpaceNumber() != 1) {
+                next = currentSpace;
+
+                if (currentSpace.getLine() != 0
+                        && maze[currentSpace.getLine() - 1][currentSpace.getColumn()].getSpaceNumber() < next.getSpaceNumber()
+                        && maze[currentSpace.getLine()][currentSpace.getColumn()].hasSpaceUp() == true) {
+                    next = maze[currentSpace.getLine() - 1][currentSpace.getColumn()];
+                }
+                if (currentSpace.getColumn() != 0
+                        && maze[currentSpace.getLine()][currentSpace.getColumn() - 1].getSpaceNumber() < next.getSpaceNumber()
+                        && maze[currentSpace.getLine()][currentSpace.getColumn()].hasSpaceLeft() == true) {
+                    next = maze[currentSpace.getLine()][currentSpace.getColumn() - 1];
+                }
+                if (currentSpace.getLine() != maze.length - 1
+                        && maze[currentSpace.getLine() + 1][currentSpace.getColumn()].getSpaceNumber() < next.getSpaceNumber()
+                        && maze[currentSpace.getLine()][currentSpace.getColumn()].hasSpaceDown() == true) {
+                    next = maze[currentSpace.getLine() + 1][currentSpace.getColumn()];
+                }
+                if (currentSpace.getColumn() != maze[0].length - 1
+                        && maze[currentSpace.getLine()][currentSpace.getColumn() + 1].getSpaceNumber() < next.getSpaceNumber()
+                        && maze[currentSpace.getLine()][currentSpace.getColumn()].hasSpaceRight() == true) {
+                    next = maze[currentSpace.getLine()][currentSpace.getColumn() + 1];
+                }
+
+                stack.push(next);
+            }
+        }
+        return stack;
+    }
+
+    public boolean[] CheckBlockBorders(Space space) {
+        boolean walls[] = new boolean[4];
+        walls[0] = walls[1] = walls[2] = walls[3] = true;
+
+        if (space.getLine() == 0) {
+            walls[0] = false;
+        }
+        if (space.getColumn() == 0) {
+            walls[1] = false;
+        }
+        if (space.getLine() == maze.length - 1) {
+            walls[2] = false;
+        }
+        if (space.getColumn() == maze[0].length - 1) {
+            walls[3] = false;
+        }
+
+        return walls;
+    }
+
+    public void printQueue(Queue<Space> queue) {
+        for (Space space : queue) {
+            System.out.print(space.getSpaceNumber() + ",");
         }
         System.out.println();
     }
@@ -202,18 +268,21 @@ public class Maze {
     public void setEnd(int[] end) {
         this.end = end;
     }
-    
-    public Space getSpace(int line, int column){
-        return maze[line][column];        
+
+    public Space getSpace(int line, int column) {
+        return maze[line][column];
     }
-    
-    public int getNumLines(){
+
+    public int getNumLines() {
         return maze.length;
     }
-    
-    public int getNumColumns(){
+
+    public int getNumColumns() {
         return maze[0].length;
     }
     
-    
+    public boolean getPossible() {
+        return isPossible;
+    }
+
 }
