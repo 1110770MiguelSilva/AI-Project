@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -97,6 +96,7 @@ public class GUIWindow extends JFrame {
         solve.add(bfs);
 
         addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent e) {
                 exit();
             }
@@ -171,7 +171,9 @@ public class GUIWindow extends JFrame {
                 }
                 printMaze();
                 cardLayout.show(cardLayers, "Maze Loaded");
+                setVisible(true);
             }
+            
         });
 
         dfs.addActionListener(new ActionListener() {
@@ -217,18 +219,18 @@ public class GUIWindow extends JFrame {
                     }
                 });
                 done.setText("Done");
-                done.setBounds(250, 280, 70, 20);
+                JPanel panel1 = new JPanel();
+                panel1.add(done, BorderLayout.SOUTH);
                 panel.add(lines, BorderLayout.CENTER);
-                panel.add(columns);
+                panel.add(columns, BorderLayout.CENTER);
+                panel.add(panel1);
 
                 done.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        System.out.println("BEDEDEDE");
                         if (!lines.getText().equals("") || !columns.getText().equals("")) {
                             panel.removeAll();
                             createMaze = new JTextArea();
-                            System.out.println("BEDEDEDE");
                             JPanel createMazePanel = new JPanel(new GridLayout(Integer.parseInt(lines.getText()), Integer.parseInt(columns.getText())));
                             createMazePanel.setBounds(Integer.parseInt(lines.getText()) + 1, Integer.parseInt(columns.getText()) + 1, 100, 100);
                             createMazePanel.add(createMaze);
@@ -237,7 +239,8 @@ public class GUIWindow extends JFrame {
                     }
 
                 });
-                panel.add(done);
+                
+                setVisible(true);
             }
         });
 
