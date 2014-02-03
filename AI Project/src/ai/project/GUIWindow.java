@@ -4,17 +4,27 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.FileDialog;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Stack;
 import javax.swing.*;
+import java.lang.Object;
+import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,7 +33,7 @@ import javax.swing.*;
 public class GUIWindow extends JFrame {
 
     private Maze maze = new Maze();
-    JTextArea createMaze;
+    JTextArea createMaze, instructions;
     JMenuBar menu;
     JMenu file, solve;
     JMenuItem exit, dfs, bfs, importTxt, create;
@@ -36,6 +46,8 @@ public class GUIWindow extends JFrame {
     JTextField lines;
     JTextField columns;
     JButton done = new JButton();
+    ActionListener al, printMaze;
+    
 
     public GUIWindow() {
         super("Maze Solver");
@@ -220,32 +232,132 @@ public class GUIWindow extends JFrame {
                 });
                 done.setText("Done");
                 JPanel panel1 = new JPanel();
-                panel1.add(done, BorderLayout.SOUTH);
-                panel.add(lines, BorderLayout.CENTER);
-                panel.add(columns, BorderLayout.CENTER);
-                panel.add(panel1);
-
-                done.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        if (!lines.getText().equals("") || !columns.getText().equals("")) {
-                            panel.removeAll();
-                            createMaze = new JTextArea();
-                            JPanel createMazePanel = new JPanel(new GridLayout(Integer.parseInt(lines.getText()), Integer.parseInt(columns.getText())));
-                            createMazePanel.setBounds(Integer.parseInt(lines.getText()) + 1, Integer.parseInt(columns.getText()) + 1, 100, 100);
-                            createMazePanel.add(createMaze);
-                            panel.add(createMazePanel);
-                        }
-                    }
-
-                });
-                
+                panel1.add(done);
+                panel1.add(lines);
+                panel1.add(columns);
+                panel.add(panel1, BorderLayout.SOUTH);
+                done.addActionListener(al);
                 setVisible(true);
             }
         });
 
+        al = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!lines.getText().equals("") || !columns.getText().equals("")) {
+                    panel.removeAll();
+                    int numLines = Integer.parseInt(lines.getText()), numColumns = Integer.parseInt(columns.getText());
+                    createMaze = new JTextArea();
+                    createMaze.setFont(new Font("Serif", Font.PLAIN, 16));
+                    JPanel createMazePanel = new JPanel(new BorderLayout(Integer.parseInt(lines.getText()), Integer.parseInt(columns.getText())));
+                    createMazePanel.add(createMaze);
+                    panel.add(createMazePanel);
+                    //Filling the border in the JTextArea
+                    for (int i = 0; i < numLines+1; i++) {
+                        if(i==0){
+                            for(int j = 0;j<numColumns; j++){
+                                createMaze.append(" -");
+                            }
+                            createMaze.append(" ");
+                            createMaze.append("\n");
+                        }else if(i==numLines){
+                            for(int q = 0;q<numColumns*2-1; q++){
+                                if(q==0){     
+                                    createMaze.append("|");
+                                    for(int k=0;k<numColumns*2-1;k++){
+                                        createMaze.append(" ");
+                                    }
+                                }
+                                if(q==numColumns-1){ 
+                                    createMaze.append("|\n");
+                                    for(int j = 0;j<numColumns; j++){
+                                        createMaze.append(" -");
+                                    }
+                                    createMaze.append(" ");
+                                }
+                            }
+                        }else{
+                            for(int q = 0;q<numColumns*2-1; q++){
+                                if(q==0){ 
+                                    createMaze.append("|");
+                                    for(int k=0;k<numColumns*2-1;k++){
+                                        createMaze.append(" ");
+                                    }
+                                }
+                                else {
+                                    if(q==numColumns-1){
+                                        createMaze.append("|\n");
+                                        for(int k=0;k<numColumns*2+1;k++){
+                                            createMaze.append(" ");
+                                        }
+                                        createMaze.append("\n");
+                                    }
+                                }
+                            }
+                        }
+                    
+                    }
+                    done = new JButton();
+                    done.setText("Done");
+                    done.setSize(70, 20);
+                    JPanel panel1 = new JPanel();
+                    panel1.add(done);
+                    createMazePanel.add(panel1, BorderLayout.SOUTH);
+                    
+                    done.addActionListener(printMaze);
+                    
+                    instructions = new JTextArea();
+                    instructions.setEditable(false);
+                    instructions.append("Instructions:\n "
+                            + "1-At the end of the maze, put entrance and exit coordinates\n\n"
+                            + "Example:\n"
+                            + " - - - - - - - - \n" +
+                            "| | |   |       |\n" +
+                            "         -----   \n" +
+                            "| |     |     | |\n" +
+                            "           - -   \n" +
+                            "| | |   | |   | |\n" +
+                            "                 \n" +
+                            "| | |   | |     |\n" +
+                            "                 \n" +
+                            "|         |   | |\n" +
+                            "       ----      \n" +
+                            "|   |         | |\n" +
+                            "       -   - -   \n" +
+                            "|   |           |\n" +
+                            "   ------------- \n" +
+                            "|             | |\n" +
+                            " - - - - - - - - \n" +
+                            "0,0\n" +
+                            "0,4");
+                    createMazePanel.add(instructions, BorderLayout.SOUTH);
+
+                    
+                }
+                setVisible(true);
+            }
+            
+        };
+
+        printMaze = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BufferedWriter fileOut;
+                try {
+                    fileOut = new BufferedWriter(new FileWriter("filename.txt"));
+                    createMaze.write(fileOut);
+                } catch (IOException ex) {
+                    Logger.getLogger(GUIWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        
+        
+        };
+        
         setVisible(true);
     }
+    
+    
 
     private void solve() {
         if (maze.getPossible() == true) {
