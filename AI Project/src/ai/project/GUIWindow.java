@@ -33,14 +33,14 @@ import java.util.logging.Logger;
 public class GUIWindow extends JFrame {
 
     private Maze maze = new Maze();
-    JTextArea createMaze, instructions, borders;
+    JTextArea createMaze, instructions;
     JMenuBar menu;
     JMenu file, solve;
     JMenuItem exit, dfs, bfs, importTxt, create, compare;
     ImageIcon background;
     JScrollPane scrollPane;
     GUISpace spaces[][];
-    JPanel cardLayers;
+    JPanel cardPanel;
     CardLayout cardLayout;
     String filePath;
     JTextField lines;
@@ -66,8 +66,8 @@ public class GUIWindow extends JFrame {
         setMinimumSize(new Dimension(600, 400));
 
         cardLayout = new CardLayout();
-        cardLayers = new JPanel(cardLayout);
-        cardLayers.setOpaque(false);
+        cardPanel = new JPanel(cardLayout);
+        cardPanel.setOpaque(false);
 
         menu = new JMenuBar();
         add(menu);
@@ -84,7 +84,7 @@ public class GUIWindow extends JFrame {
         };
         panel.setLayout(new BorderLayout());
         panel.add(menu, BorderLayout.NORTH);
-        panel.add(cardLayers, BorderLayout.CENTER);
+        panel.add(cardPanel, BorderLayout.CENTER);
         scrollPane = new JScrollPane(panel);
         setContentPane(scrollPane);
 
@@ -182,14 +182,14 @@ public class GUIWindow extends JFrame {
                             }
                         }
 
-                        cardLayers.add(mazePanel, "Load Maze");
+                        cardPanel.add(mazePanel, "Load Maze");
 
                     } catch (FileNotFoundException ex) {
                         JOptionPane.showMessageDialog(rootPane, "Error openning the file.");
                     }
                 }
                 printMaze();
-                cardLayout.show(cardLayers, "Maze Loaded");
+                cardLayout.show(cardPanel, "Maze Loaded");
                 setVisible(true);
             }
             
@@ -217,6 +217,7 @@ public class GUIWindow extends JFrame {
                     @Override
                     public void actionPerformed(ActionEvent e
                     ) {
+                        
                         runningMethod = "bfs";
                         maze.methodBFS();
                         solve();
@@ -283,12 +284,9 @@ public class GUIWindow extends JFrame {
                     int numLines = Integer.parseInt(lines.getText()), numColumns = Integer.parseInt(columns.getText());
                     createMaze = new JTextArea();
                     createMaze.setFont(new Font("Serif", Font.PLAIN, 16));
-                    createMaze.setEditable(false);
-                    borders = new JTextArea();
                     
                     JPanel createMazePanel = new JPanel(new BorderLayout(Integer.parseInt(lines.getText()), Integer.parseInt(columns.getText())));
                     createMazePanel.add(createMaze);
-                    createMazePanel.add(borders);
                     panel.add(createMazePanel);
                     //Filling the border in the JTextArea
                     for (int i = 0; i < numLines+1; i++) {
@@ -368,7 +366,9 @@ public class GUIWindow extends JFrame {
                             " - - - - - - - - \n" +
                             "0,0\n" +
                             "0,4");
-                    createMazePanel.add(instructions, BorderLayout.SOUTH);
+                    JPanel panel2 = new JPanel();
+                    panel2.add(instructions);
+                    createMazePanel.add(panel2, BorderLayout.EAST);
 
                     
                 }
