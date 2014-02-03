@@ -33,10 +33,10 @@ import java.util.logging.Logger;
 public class GUIWindow extends JFrame {
 
     private Maze maze = new Maze();
-    JTextArea createMaze, instructions;
+    JTextArea createMaze, instructions, borders;
     JMenuBar menu;
     JMenu file, solve;
-    JMenuItem exit, dfs, bfs, importTxt, create;
+    JMenuItem exit, dfs, bfs, importTxt, create, compare;
     ImageIcon background;
     JScrollPane scrollPane;
     GUISpace spaces[][];
@@ -47,6 +47,10 @@ public class GUIWindow extends JFrame {
     JTextField columns;
     JButton done = new JButton();
     ActionListener al, printMaze;
+    int dfsLength = 1, bfsLength = 1;
+    float dfsTime, bfsTime;
+    boolean dfsRan = false, bfsRan = false;
+    String runningMethod;
     
 
     public GUIWindow() {
@@ -94,6 +98,8 @@ public class GUIWindow extends JFrame {
         dfs.setAccelerator(KeyStroke.getKeyStroke("ctrl D"));
         bfs = new JMenuItem("BFS", 'B');
         bfs.setAccelerator(KeyStroke.getKeyStroke("ctrl B"));
+        compare = new JMenuItem("Compare Methods", 'C');
+        compare.setAccelerator(KeyStroke.getKeyStroke("ctrl C"));
         importTxt = new JMenuItem("Import Maze");
         importTxt.setAccelerator(KeyStroke.getKeyStroke("ctrl I"));
         create = new JMenuItem("Create Maze", 'C');
@@ -106,6 +112,7 @@ public class GUIWindow extends JFrame {
         file.add(create);
         solve.add(dfs);
         solve.add(bfs);
+        solve.add(compare);
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -188,23 +195,50 @@ public class GUIWindow extends JFrame {
             
         });
 
-        dfs.addActionListener(new ActionListener() {
+        dfs.addActionListener(
+                new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                maze.methodDFS();
-                solve();
-            }
-        });
+                    @Override
+                    public void actionPerformed(ActionEvent e
+                    ) {
+                        runningMethod = "dfs";
+                        maze.methodDFS();
+                        solve();
+                        dfsRan = true;
+                        dfsTime = maze.getDfsTime();
 
-        bfs.addActionListener(new ActionListener() {
+                    }
+                }
+        );
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                maze.methodBFS();
-                solve();
-            }
-        });
+        bfs.addActionListener(
+                new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(ActionEvent e
+                    ) {
+                        runningMethod = "bfs";
+                        maze.methodBFS();
+                        solve();
+                        bfsRan = true;
+                        bfsTime = maze.getBfsTime();
+                    }
+                }
+        );
+
+        compare.addActionListener(
+                new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e
+                    ) {
+                        if (dfsRan && bfsRan) {
+                            String x = "DFS Method ran for " + dfsTime + " milliseconds, and took " + dfsLength + " steps to solve.\n\n"
+                                    + "BFS Method ran for " + bfsTime + " seconds, and took " + bfsLength + " steps to solve.";
+                            JOptionPane.showMessageDialog(rootPane, x);
+                        }
+                    }
+                }
+        );
 
         create.addActionListener(new ActionListener() {
 
@@ -249,8 +283,12 @@ public class GUIWindow extends JFrame {
                     int numLines = Integer.parseInt(lines.getText()), numColumns = Integer.parseInt(columns.getText());
                     createMaze = new JTextArea();
                     createMaze.setFont(new Font("Serif", Font.PLAIN, 16));
+                    createMaze.setEditable(false);
+                    borders = new JTextArea();
+                    
                     JPanel createMazePanel = new JPanel(new BorderLayout(Integer.parseInt(lines.getText()), Integer.parseInt(columns.getText())));
                     createMazePanel.add(createMaze);
+                    createMazePanel.add(borders);
                     panel.add(createMazePanel);
                     //Filling the border in the JTextArea
                     for (int i = 0; i < numLines+1; i++) {
@@ -363,8 +401,8 @@ public class GUIWindow extends JFrame {
         if (maze.getPossible() == true) {
             int size = maze.getNumColumns() * maze.getNumLines();
             for (int k = 1; k < size + 1; k++) {
-                for (int i = 0; i < maze.getNumColumns(); i++) {
-                    for (int j = 0; j < maze.getNumLines(); j++) {
+                for (int i = 0; i < maze.getNumLines(); i++) {
+                    for (int j = 0; j < maze.getNumColumns(); j++) {
                         if (maze.getSpace(i, j).getSpaceNumber() == k) {
                             spaces[i][j].setPassed(maze.getSpace(i, j).getSpaceNumber());
                             spaces[i][j].repaint();
@@ -374,8 +412,31 @@ public class GUIWindow extends JFrame {
             }
 
             Stack<Space> stack;
-            //stack = maze.solve();
+            stack = maze.solve();
 
+            do {
+                Space correctSpace = stack.pop();
+                for (int i = 0; i < maze.getNumLines(); i++) {
+                    for (int j = 0; j < maze.getNumColumns(); j++) {
+                        if (correctSpace.getLine() == i && correctSpace.getColumn() == j) {
+                            spaces[i][j].setCorrect();
+                            spaces[i][j].repaint();
+                            if (runningMethod == "dfs") {
+                                dfsLength++;
+                            }
+                            if (runningMethod == "bfs") {
+                                bfsLength++;
+                            }
+                        }
+                    }
+                }
+            } while (!stack.isEmpty());
+            if (runningMethod == "dfs") {
+                dfsRan = true;
+            }
+            if (runningMethod == "bfs") {
+                bfsRan = true;
+            }
         }
     }
 

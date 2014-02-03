@@ -11,9 +11,10 @@ public class Maze {
 
     private Space maze[][];
     private boolean isPossible = true;
-
+    private Stack<Space> stack;
     private int begin[] = new int[2];
     private int end[] = new int[2];
+    private long dfsTime, bfsTime;
 
     //Method which will read a text file, and from it create the respective Maze
     public void readFile(String filepath) throws FileNotFoundException {
@@ -63,14 +64,6 @@ public class Maze {
                 column = column + 2;
             }
             line = line + 2;
-        }
-    }
-
-    public void resetMaze() {
-        for (int i = 0; i < maze.length; i++) {
-            for (int j = 0; j < maze[0].length; j++) {
-                maze[i][j].setSpaceNumber(0);
-            }
         }
     }
 
@@ -127,8 +120,7 @@ public class Maze {
             isPossible = false;
         }
 
-        long elapsedTime = System.nanoTime() - startTime;
-        System.out.println("DFS-Elapsed Time:" + elapsedTime);
+        dfsTime = System.nanoTime() - startTime;
     }
 
     //Up->Left->Down->Right
@@ -185,18 +177,18 @@ public class Maze {
             isPossible = false;
         }
 
-        long elapsedTime = System.nanoTime() - startTime;
-        System.out.println("BFS-Elapsed Time:" + elapsedTime);
+        bfsTime = System.nanoTime() - startTime;
     }
 
     public Stack<Space> solve() {
-        Stack<Space> stack = null;
+
         if (isPossible = true) {
             stack = new Stack<Space>();
             Space currentSpace = maze[end[0]][end[1]];
             Space next;
 
-            while (currentSpace.getSpaceNumber() != 1) {
+            do {
+                stack.push(currentSpace);
                 next = currentSpace;
 
                 if (currentSpace.getLine() != 0
@@ -219,9 +211,10 @@ public class Maze {
                         && maze[currentSpace.getLine()][currentSpace.getColumn()].hasSpaceRight() == true) {
                     next = maze[currentSpace.getLine()][currentSpace.getColumn() + 1];
                 }
+                currentSpace = next;
 
-                stack.push(next);
-            }
+            } while (currentSpace.getSpaceNumber() != 1);
+
         }
         return stack;
     }
@@ -280,9 +273,26 @@ public class Maze {
     public int getNumColumns() {
         return maze[0].length;
     }
-    
+
     public boolean getPossible() {
         return isPossible;
+    }
+
+    public void clearMaze() {
+        for (int i = 0; i < maze.length; i++) {
+            for (int j = 0; j < maze[0].length; j++) {
+                maze[i][j].setSpaceNumber(0);
+            }
+        }
+        stack = null;
+    }
+
+    public long getDfsTime() {
+        return dfsTime;
+    }
+
+    public long getBfsTime() {
+        return bfsTime;
     }
 
 }

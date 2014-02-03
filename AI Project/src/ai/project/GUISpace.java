@@ -64,6 +64,12 @@ public class GUISpace extends Panel {
         if (!right) {
             g.drawLine(width, 0, width, height);
         }
+
+        if (!passed) {
+            this.setBackground(Color.LIGHT_GRAY);
+            g.setColor(Color.BLACK);
+        }
+
         if (passed) {
             try {
                 Thread.sleep(100);
@@ -73,22 +79,15 @@ public class GUISpace extends Panel {
             g.drawString("" + number, (width / 3) + (width / 7), height / 3 + height / 7);
         }
         if (correct) {
-            String draw = "";
-            int l = String.valueOf(number).length();
-            for (int i = 0; i < l + 2; i++) {
-                draw += "*";
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(GUISpace.class.getName()).log(Level.SEVERE, null, ex);
             }
-            draw += "\n*" + number + "*\n";
-            for (int i = 0; i < l + 2; i++) {
-                draw += "*";
+            g.setColor(Color.ORANGE);
+            if (!end) {
+                this.setBackground(Color.BLUE);
             }
-            g.drawString(draw, (width / 3) + (width / 7), height / 3 + height / 7);
-        }
-    }
-
-    private void drawString(Graphics g, String text, int x, int y) {
-        for (String line : text.split("\n")) {
-            g.drawString(line, x, y += g.getFontMetrics().getHeight());
         }
     }
 
