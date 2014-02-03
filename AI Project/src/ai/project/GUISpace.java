@@ -15,6 +15,8 @@ import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextLayout;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -63,6 +65,11 @@ public class GUISpace extends Panel {
             g.drawLine(width, 0, width, height);
         }
         if (passed) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(GUISpace.class.getName()).log(Level.SEVERE, null, ex);
+            }
             g.drawString("" + number, (width / 3) + (width / 7), height / 3 + height / 7);
         }
         if (correct) {
